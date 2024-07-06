@@ -1,7 +1,9 @@
 #include "test.h"
 #include <stdio.h>
 #include <stdarg.h>
+#if !defined(_WIN32)
 #include <sys/time.h>
+#endif
 
 struct test_context_s {
   const test_suite_t* suite;

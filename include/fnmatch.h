@@ -31,10 +31,14 @@
 extern "C" {
 #endif
 
+#if !defined(_WIN32)
 #include <unistd.h>
+#endif
 #include <stddef.h>
 
+#if !defined(_WIN32)
 #include <buffer.h>
+#endif
 
 #define FNMATCH_EXTERN extern
 
