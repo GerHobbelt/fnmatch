@@ -33,7 +33,15 @@ extern "C" {
 
 #include <stddef.h>
 #include <stdarg.h>
+#include <stdint.h>
 #include <assert.h>
+
+#ifndef __GCC__
+#define __attribute__(x)		/**/
+#endif
+#ifdef _MSC_VER
+	typedef int64_t ssize_t;
+#endif
 
 #include "array.h"
 
