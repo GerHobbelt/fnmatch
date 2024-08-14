@@ -32,7 +32,7 @@ static size_t fnmatch__compiler_oparg(
   size_t read, written;
   size_t start = buffer->length;
   
-  read    = buffer_read_escaped( buffer, c, data, len, delim, ndelim, esc, nesc ),
+	read = buffer_read_escaped(buffer, c, data, len, delim, ndelim, esc, nesc);
   written = buffer->length - start;
   
   if( written ) {
