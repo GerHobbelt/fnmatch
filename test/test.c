@@ -1,6 +1,7 @@
 #include "test.h"
 #include <stdio.h>
 #include <stdarg.h>
+#include <stdint.h>
 #if !defined(_WIN32)
 #include <sys/time.h>
 #endif
@@ -102,7 +103,7 @@ static void test__run_data( test_context_t* context, int i ) {
       test__run_data( context, i );
     }
   } else {
-    context->data = (test->data) + (i*test->datastep);
+    context->data = (const uint8_t *)(test->data) + (i*test->datastep);
     context->result = TEST_PASS;
     test__start( context );
     (test->callback.data_cb)( context, context->data );
