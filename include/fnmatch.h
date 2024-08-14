@@ -171,13 +171,17 @@ FNMATCH_EXTERN fnmatch_state_t fnmatch_scanner_match( fnmatch_scanner_t* scanner
 #undef FNM_NOMATCH
 
 /* The similarity to Linux is coincidental ;) */
-#define FNM_PATHNAME (1 << 0)
-#define FNM_NOESCAPE (1 << 1)
-#define FNM_PERIOD   (1 << 2)
+#define FNM_PATHNAME (1 << 0)    /* Slash must be matched by slash. Wildcard will never match / */
+#define FNM_NOESCAPE (1 << 1)    /* Disable backslash escaping. */
+#define FNM_PERIOD   (1 << 2)    /* Period must be matched by period at start of name part. */
 
-#define	FNM_NOMATCH 1
-#define FNM_NOSYS  -1
-FNMATCH_EXTERN int fnmatch( const char*, const char*, int );
+#define	FNM_LEADING_DIR	(1 << 3)  /* Ignore /<tail> after match. */
+#define	FNM_CASEFOLD	(1 << 4)   /* Pattern is matched case-insensitive. */
+
+#define	FNM_NOMATCH 1       /* Match failed. */
+#define FNM_NOSYS  -1       /* Function not implemented. */
+
+FNMATCH_EXTERN int fnmatch( const char* pattern, const char* str, int flags );
 /** @} */
 
 #ifdef __cplusplus
