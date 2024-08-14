@@ -46,7 +46,7 @@ test/gen-tests.c: test/gen-tests.sh $(TESTS)
 
 test/run-tests$(E): test/*.h test/run-tests.c test/gen-tests.c test/test.c $(TESTS) glob.a
 	$(CC) $(CPPFLAGS) -o test/run-tests test/run-tests.c test/gen-tests.c test/test.c \
-	  $(TESTS) $(LIB)
+	  $(TESTS) $(LIBS)
 
 .PHONY: clean clean-platform distclean distclean-platform test bench
 

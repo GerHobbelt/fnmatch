@@ -24,7 +24,7 @@
 E = .exe
 CC = $(PREFIX)gcc
 AR = $(PREFIX)ar
-CSTDFLAG = --std=gnu89
+CSTDFLAG = --std=gnu99
 CFLAGS = -g
 LINKFLAGS =
 
