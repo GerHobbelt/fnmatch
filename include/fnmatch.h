@@ -36,9 +36,7 @@ extern "C" {
 #endif
 #include <stddef.h>
 
-#if !defined(_WIN32)
 #include <buffer.h>
-#endif
 
 #define FNMATCH_EXTERN extern
 
