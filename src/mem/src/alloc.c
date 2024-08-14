@@ -1,5 +1,17 @@
 #include "alloc.h"
+#if defined(HAVE_JEMALLOC)
 #include "jemalloc.h"
+#else
+#if defined(_MSC_VER)
+#include <crtdbg.h>
+#endif
+#include <stdlib.h>
+
+#define je_malloc(x)		malloc(x)
+#define je_realloc(x, s)		realloc(x, s)
+#define je_free(x)			free(x)
+
+#endif
 
 #define REALLOC_SIZE(s) (((s)+16)/8*13)
 
