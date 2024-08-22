@@ -1,3 +1,5 @@
+#if 0
+
 /*========================================================*/
 /* == ./gcc/include/fnmatch.h == */
 /* Copyright (C) 1991-2024 Free Software Foundation, Inc.
@@ -4224,3 +4226,5 @@ cvs_filelist_cmp(struct cvs_filelist *f1, struct cvs_filelist *f2)
 {
 	return (strcmp(f1->file_path, f2->file_path));
 }
+
+#endif

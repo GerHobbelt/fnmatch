@@ -1,3 +1,5 @@
+#if 0
+
 /*========================================================*/
 /* == ./libnbcompat/fnmatch.c == */
 /*	$NetBSD: fnmatch.c,v 1.3 2004/08/23 03:32:12 jlam Exp $	*/
@@ -1309,3 +1311,5 @@ firstsegment:
 	/* Pattern didn't match to the end of string. */
 	return FNM_NOMATCH;
 }
+
+#endif

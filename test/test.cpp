@@ -1,18 +1,19 @@
+
+#include <plf_nanotimer_c_api.h>
+
 #include "test.h"
+
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdint.h>
-#if !defined(_WIN32)
-#include <sys/time.h>
-#endif
 
 struct test_context_s {
   const test_suite_t* suite;
   const test_t* test;
-  const void* data;
+  const uint8_t* data;
   test_result_t result;
   FILE* log;
-  struct timeval start, finish;
+	nanotimer_data_t start;
   int msg, total, count[TEST_RESULT_MAX];
 };
 
@@ -45,7 +46,7 @@ void test_message( test_context_t* context, const char* file, int line, const ch
 static void test__start( test_context_t* context ) {
   const test_t* test = context->test;
 /*const test_suite_t* suite = context->suite;*/
-  const void* data = context->data;
+  const uint8_t* data = context->data;
   
   if( test ) {
     fprintf( context->log, "TEST %s", test->name );
@@ -59,7 +60,7 @@ static void test__start( test_context_t* context ) {
     fprintf( context->log, ":" );
   }
   
-  gettimeofday( &(context->start), NULL );
+	nanotimer_start(&(context->start));
 }
 
 static void test__finish( test_context_t* context ) {
@@ -70,13 +71,8 @@ static void test__finish( test_context_t* context ) {
     "WARN",
     "ERROR"
   };
-  double diff;
-  
-  gettimeofday( &(context->finish), NULL );
-  
-  diff = ((context->finish.tv_sec - context->start.tv_sec) * 1000)
-       + ((context->finish.tv_usec - context->start.tv_usec) * 0.001);
-  
+  double diff = nanotimer_get_elapsed_ms(&(context->start));
+
   context->total++;
   context->count[context->result]++;
   if( context->msg == 0 ) {
@@ -113,14 +109,11 @@ static void test__run_data( test_context_t* context, int i ) {
 }
 
 static void test__run( test_context_t* context ) {
-  int i;
-
   if( context->test->datastep == 0 ) {
     test__run_void( context );
   } else {
     test__run_data( context, -1 );
   }
-  return;
 }
 
 test_result_t test_run( const test_t* test ) {
