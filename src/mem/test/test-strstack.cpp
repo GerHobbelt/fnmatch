@@ -1,5 +1,6 @@
-#include "strstack.h"
 #include "test.h"
+
+#include "strstack.h"
 
 struct test_strstack_s {
   size_t items;

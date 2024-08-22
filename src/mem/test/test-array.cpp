@@ -1,5 +1,6 @@
-#include "array.h"
 #include "test.h"
+
+#include "array.h"
 
 struct int_array_s array_s(int);
 typedef struct int_array_s int_array_t;

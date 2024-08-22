@@ -1,5 +1,6 @@
-#include "buffer.h"
 #include "test.h"
+
+#include "buffer.h"
 
 #include <stdlib.h>
 

@@ -1,5 +1,6 @@
-#include "fnmatch.h"
 #include "test.h"
+
+#include "fnmatch.h"
 
 typedef struct test_pattern_s {
   const char* expr;
@@ -44,19 +45,28 @@ static const test_pattern_t _data[] = {
   { "t\\/st", "t/st", "t\\/st" },
 };
 
-TEST( test_pattern, _data, const test_pattern_t* data ) {
-  fnmatch_state_t state;
-  fnmatch_pattern_t pattern;
-  fnmatch_pattern_init( &pattern );
-  
-/*MSG("%s, %s, %s", data->expr, data->matchstr, data->nomatchstr);*/
-  
-  state = fnmatch_pattern_compile( &pattern, data->expr, 0 );
-  ASSERTEQ( state, FNMATCH_CONTINUE, "Could not compile pattern `%s'.\n", data->expr );
+TEST( test_pattern ) {
+	const size_t len = sizeof(_data) / sizeof(_data[0]);
+	for (int i = 0; i < len; i++) {
+		const test_pattern_t* data = &_data[i];
+		char failmsg[2000];
 
-  state = fnmatch_pattern_match( &pattern, data->matchstr );
-  ASSERTEQ( state, FNMATCH_MATCH, "`%s' did not match %s' but should.\n", data->expr, data->matchstr );
+		fnmatch_state_t state;
+		fnmatch_pattern_t pattern;
+		fnmatch_pattern_init(&pattern);
 
-  state = fnmatch_pattern_match( &pattern, data->nomatchstr );
-  ASSERTEQ( state, FNMATCH_NOMATCH, "`%s' did match `%s' but shouldn't.\n", data->expr, data->nomatchstr );
+		/*MSG("%s, %s, %s", data->expr, data->matchstr, data->nomatchstr);*/
+
+		state = fnmatch_pattern_compile(&pattern, data->expr, 0);
+		snprintf(failmsg, sizeof(failmsg), "Could not compile pattern `%s'.\n", data->expr);
+		ASSERTEQ_W_MSG(state, FNMATCH_CONTINUE, failmsg);
+
+		state = fnmatch_pattern_match(&pattern, data->matchstr);
+		snprintf(failmsg, sizeof(failmsg), "`%s' did not match %s' but should.\n", data->expr, data->matchstr);
+		ASSERTEQ_W_MSG(state, FNMATCH_MATCH, failmsg);
+
+		state = fnmatch_pattern_match(&pattern, data->nomatchstr);
+		snprintf(failmsg, sizeof(failmsg), "`%s' did match `%s' but shouldn't.\n", data->expr, data->nomatchstr);
+		ASSERTEQ_W_MSG(state, FNMATCH_NOMATCH, failmsg);
+	}
 }

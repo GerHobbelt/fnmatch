@@ -1,5 +1,7 @@
-#include "fnmatch.h"
 #include "test.h"
+
+#include "fnmatch.h"
+
 #include <string.h>
 
 TEST( test_context_single ) {
@@ -8,8 +10,8 @@ TEST( test_context_single ) {
   const char* str;
   
   fnmatch_pattern_init( &pattern );
-  ASSERTEQ( FNMATCH_CONTINUE, fnmatch_pattern_compile( &pattern, "test/**.[hc]", 0 ),
-            "Failed to compile pattern.\n" );
+  ASSERTEQ_W_MSG( FNMATCH_CONTINUE, fnmatch_pattern_compile( &pattern, "test/**.[hc]", 0 ),
+            "Failed to compile pattern." );
   fnmatch_context_init( &context, &pattern );
 
   fnmatch_context_push( &context, "test/test-context.c" );
@@ -19,7 +21,7 @@ TEST( test_context_single ) {
   ASSERTEQ( FNMATCH_MATCH, fnmatch_context_match( &context ) ); /* test-context.c */
   ASSERTEQ( FNMATCH_POP, fnmatch_context_match( &context ) );
   str = fnmatch_context_pop( &context );
-  ASSERTSTREQ( "test-context.c", str, "with str = `%s'\n", str );
+  ASSERTSTREQ( "test-context.c", str );
 
   ASSERTEQ( context.nmatch, 1 );
   ASSERTEQ( context.nnomatch, 0 );
@@ -34,15 +36,15 @@ TEST( test_context_multiple ) {
   const char* str;
   
   fnmatch_pattern_init( &pattern );
-  ASSERTEQ( FNMATCH_CONTINUE, fnmatch_pattern_compile( &pattern, "test/**.[hc]", 0 ),
-            "Failed to compile pattern.\n" );
+  ASSERTEQ_W_MSG( FNMATCH_CONTINUE, fnmatch_pattern_compile( &pattern, "test/**.[hc]", 0 ),
+            "Failed to compile pattern." );
   fnmatch_context_init( &context, &pattern );
 
   fnmatch_context_push( &context, "xxx/" );
   ASSERTEQ( FNMATCH_NOMATCH, fnmatch_context_match( &context ) );
   ASSERTEQ( FNMATCH_POP, fnmatch_context_match( &context ) );
   str = fnmatch_context_pop( &context );
-  ASSERTSTREQ( "xxx/", str, "with str = `%s'\n", str );
+  ASSERTSTREQ( "xxx/", str );
   
   ASSERTEQ( FNMATCH_PUSH, fnmatch_context_match( &context ) );
   fnmatch_context_push( &context, "test/" );
@@ -63,7 +65,7 @@ TEST( test_context_multiple ) {
   ASSERTEQ( FNMATCH_MATCH, fnmatch_context_match( &context ) ); /* "baz.c" */
   ASSERTEQ( FNMATCH_POP, fnmatch_context_match( &context ) );
   str = fnmatch_context_pop( &context );
-  ASSERTSTREQ( "baz.c", str, "with str = `%s'\n", str );
+  ASSERTSTREQ( "baz.c", str );
   
   ASSERTEQ( FNMATCH_PUSH, fnmatch_context_match( &context ) );
   fnmatch_context_push( &context, "baz.h" );
@@ -73,14 +75,14 @@ TEST( test_context_multiple ) {
   ASSERTEQ( FNMATCH_MATCH, fnmatch_context_match( &context ) ); /* "baz.h" */
   ASSERTEQ( FNMATCH_POP, fnmatch_context_match( &context ) );
   str = fnmatch_context_pop( &context );
-  ASSERTSTREQ( "baz.h", str, "with str = `%s'\n", str );
+  ASSERTSTREQ( "baz.h", str );
 
   ASSERTEQ( FNMATCH_PUSH, fnmatch_context_match( &context ) );
   fnmatch_context_push( &context, NULL );
   ASSERTEQ( FNMATCH_NOMATCH, fnmatch_context_match( &context ) );
   ASSERTEQ( FNMATCH_POP, fnmatch_context_match( &context ) );
   str = fnmatch_context_pop( &context );
-  ASSERTSTREQ( "bar/", str, "with str = `%s'\n", str );
+  ASSERTSTREQ( "bar/", str );
   
   ASSERTEQ( FNMATCH_PUSH, fnmatch_context_match( &context ) );
   fnmatch_context_push( &context, "bar.h" );
@@ -90,21 +92,21 @@ TEST( test_context_multiple ) {
   ASSERTEQ( FNMATCH_MATCH, fnmatch_context_match( &context ) ); /* "bar.h" */
   ASSERTEQ( FNMATCH_POP, fnmatch_context_match( &context ) );
   str = fnmatch_context_pop( &context );
-  ASSERTSTREQ( "bar.h", str, "with str = `%s'\n", str );
+  ASSERTSTREQ( "bar.h", str );
   
   ASSERTEQ( FNMATCH_PUSH, fnmatch_context_match( &context ) );
   fnmatch_context_push( &context, NULL );
   ASSERTEQ( FNMATCH_NOMATCH, fnmatch_context_match( &context ) );
   ASSERTEQ( FNMATCH_POP, fnmatch_context_match( &context ) );
   str = fnmatch_context_pop( &context );
-  ASSERTSTREQ( "foo/", str, "with str = `%s'\n", str );
+  ASSERTSTREQ( "foo/", str );
 
   ASSERTEQ( FNMATCH_PUSH, fnmatch_context_match( &context ) );
   fnmatch_context_push( &context, NULL );
   ASSERTEQ( FNMATCH_NOMATCH, fnmatch_context_match( &context ) );
   ASSERTEQ( FNMATCH_POP, fnmatch_context_match( &context ) );
   str = fnmatch_context_pop( &context );
-  ASSERTSTREQ( "test/", str, "with str = `%s'\n", str );
+  ASSERTSTREQ( "test/", str );
   
   ASSERTEQ( context.nmatch, 3 );
   ASSERTEQ( context.nnomatch, 4 );

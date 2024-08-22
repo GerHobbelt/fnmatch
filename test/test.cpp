@@ -7,6 +7,8 @@
 #include <stdarg.h>
 #include <stdint.h>
 
+#if 0
+
 struct test_context_s {
   const test_suite_t* suite;
   const test_t* test;
@@ -170,3 +172,4 @@ test_result_t test_suite_run( const test_suite_t* suite ) {
   return context.result;
 }
 
+#endif

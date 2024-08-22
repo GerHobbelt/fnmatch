@@ -1,5 +1,7 @@
-#include "fnmatch.h"
 #include "test.h"
+
+#include "fnmatch.h"
+
 #include <string.h>
 
 typedef struct test_scanner_data_s test_scanner_data_t;
@@ -59,7 +61,7 @@ static const test_scanner_data_t _data[] = {
 };
 
 static fnmatch_state_t test_push_cb( fnmatch_context_t* context, void* info ) {
-  test_scanner_count_t* count = info;
+  test_scanner_count_t* count = (test_scanner_count_t *)info;
   const test_scanner_data_t* data = count->data;
   
   if( count->push < data->count.push ) {
@@ -70,7 +72,7 @@ static fnmatch_state_t test_push_cb( fnmatch_context_t* context, void* info ) {
 }
 
 static fnmatch_state_t test_pop_cb( fnmatch_context_t* context, void* info ) {
-  test_scanner_count_t* count = info;
+  test_scanner_count_t* count = (test_scanner_count_t *)info;
   const test_scanner_data_t* data = count->data;
   const char* str;
   
@@ -84,28 +86,33 @@ static fnmatch_state_t test_pop_cb( fnmatch_context_t* context, void* info ) {
 }
 
 static fnmatch_state_t test_match_cb( fnmatch_context_t* context, fnmatch_match_t* match, void* info ) {
-  test_scanner_count_t* count = info;
+  test_scanner_count_t* count = (test_scanner_count_t *)info;
   
   count->match++;
   return FNMATCH_CONTINUE;
 }
 
-TEST( test_scanner, _data, const test_scanner_data_t* data ) {
-  fnmatch_pattern_t pattern;
-  fnmatch_scanner_t scanner;
-  
-  test_scanner_count_t count = { data, 0, 0, 0 };
-  
-  fnmatch_pattern_init( &pattern );
-  ASSERTEQ( FNMATCH_CONTINUE, fnmatch_pattern_compile( &pattern, data->expr, 0 ) );
-  fnmatch_scanner_init( &scanner, &pattern, &test_push_cb, &test_pop_cb, &test_match_cb );
-  
-  fnmatch_scanner_match( &scanner, &count );
-    
-  ASSERTEQ( count.push, data->count.push );
-  ASSERTEQ( count.pop, data->count.pop );
-  ASSERTEQ( count.match, data->count.match );
-  
-  fnmatch_scanner_destroy( &scanner );
-  fnmatch_pattern_destroy( &pattern );
+TEST( test_scanner ) {
+	const size_t len = sizeof(_data) / sizeof(_data[0]);
+	for (int i = 0; i < len; i++) {
+		const test_scanner_data_t* data = &_data[i];
+
+		fnmatch_pattern_t pattern;
+		fnmatch_scanner_t scanner;
+
+		test_scanner_count_t count = {data, 0, 0, 0};
+
+		fnmatch_pattern_init(&pattern);
+		ASSERTEQ(FNMATCH_CONTINUE, fnmatch_pattern_compile(&pattern, data->expr, 0));
+		fnmatch_scanner_init(&scanner, &pattern, &test_push_cb, &test_pop_cb, &test_match_cb);
+
+		fnmatch_scanner_match(&scanner, &count);
+
+		ASSERTEQ(count.push, data->count.push);
+		ASSERTEQ(count.pop, data->count.pop);
+		ASSERTEQ(count.match, data->count.match);
+
+		fnmatch_scanner_destroy(&scanner);
+		fnmatch_pattern_destroy(&pattern);
+	}
 }

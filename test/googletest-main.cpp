@@ -7,6 +7,10 @@
 #include <iostream>
 #include <sstream>
 
+
+extern "C" int fnmtest_main(int argc, const char **argv);
+
+
 using namespace std;
 
 using ::testing::InitGoogleTest;
@@ -58,22 +62,23 @@ private:
 
 int main(int argc, const char** argv)
 {
-	int rv = 0;
+	int rv;
 
 	InitGoogleTest(&argc, argv);
 
 	TestEventListeners& listeners = UnitTest::GetInstance()->listeners();
 	listeners.Append(new ExpectNFailuresListener(1));
 
-	//rv |= gtest_sample9_main(argc, argv);
+	rv = fnmtest_main(argc, argv);
 
-	rv |= gtest_main(argc, argv);
-
+	//rv |= RUN_ALL_TESTS();
 
 	// This is an example of using the UnitTest reflection API to inspect test
 	// results. Here we discount failures from the tests we expected to fail.
 	{
 		using namespace testing;
+
+		int rvs = 1;
 
 		int unexpectedly_failed_tests = 0;
 		int total_failed_tests = 0;
@@ -102,7 +107,9 @@ int main(int argc, const char** argv)
 
 		// Test that were meant to fail should not affect the test program outcome.
 		if (unexpectedly_failed_tests == 0) 
-			rv = 0;
+			rvs = 0;
+
+		rv |= rvs;
 
 		char msgbuf[500];
 		snprintf(msgbuf, sizeof(msgbuf), 

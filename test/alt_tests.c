@@ -51,7 +51,7 @@ static char* fparseln(FILE* fp, const char *delims)
 }
 
 int
-main(int argc, const char **argv)
+fnmtest_main(int argc, const char **argv)
 {
 	FILE *fp = stdin;
 	char pattern[1024], string[1024];

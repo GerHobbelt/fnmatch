@@ -1,4 +1,5 @@
 #include "test.h"
+
 #include "strarray.h"
 
 TEST( test_strarray_init_destroy ) {
