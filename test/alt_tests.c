@@ -53,7 +53,7 @@ static char* fparseln(FILE* fp, const char *delims)
 int
 fnmtest_main(int argc, const char **argv)
 {
-	FILE *fp = stdin;
+	FILE *fp = NULL;
 	char pattern[1024], string[1024];
 	char *line;
 	const char *delims = "#";
@@ -64,6 +64,11 @@ fnmtest_main(int argc, const char **argv)
 			fprintf(stderr, "cannot open file: %s\n", argv[1]);
 			return 1;
 		}
+	}
+
+	if (fp == NULL) {
+		fprintf(stderr, "alt_tests: no spec file path specified. Skipping this entire test.\n");
+		return 1;
 	}
 
 	/*

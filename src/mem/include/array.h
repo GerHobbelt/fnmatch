@@ -58,7 +58,7 @@
 #define array_grow(arr, len) \
   do { \
     size_t arrsize ## __LINE__ = ( ( (len) > ((arr)->length) ) ? len + 1 : (arr)->length + 1 ) * sizeof((arr)->data[0]); \
-    void*  arrdata ## __LINE__ = (arr)->data; \
+    void*  arrdata ## __LINE__ = (void *)((arr)->data); \
     if( (arr)->alloc == 0 ) { \
       (arr)->data = grow( NULL, arrsize ## __LINE__, &((arr)->alloc) ); \
       if( arrdata ## __LINE__ ) \

@@ -10,6 +10,7 @@
 #define je_malloc(x)		malloc(x)
 #define je_realloc(x, s)		realloc(x, s)
 #define je_free(x)			free(x)
+#define je_malloc_usable_size(ptr)   0
 
 #endif
 

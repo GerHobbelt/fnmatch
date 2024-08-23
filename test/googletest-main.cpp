@@ -71,7 +71,7 @@ int main(int argc, const char** argv)
 
 	rv = fnmtest_main(argc, argv);
 
-	//rv |= RUN_ALL_TESTS();
+	rv |= RUN_ALL_TESTS();
 
 	// This is an example of using the UnitTest reflection API to inspect test
 	// results. Here we discount failures from the tests we expected to fail.
